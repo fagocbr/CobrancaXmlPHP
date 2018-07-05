@@ -68,7 +68,6 @@ class Santander extends Transacao
         $this->configurarMarcacoes();
     }
 
-
     /**
      * @param array $parametros
      * @return Resposta

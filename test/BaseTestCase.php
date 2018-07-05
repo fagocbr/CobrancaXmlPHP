@@ -69,5 +69,5 @@ abstract class BaseTestCase extends TestCase
     /**
      * @return void
      */
-    public abstract function test();
+    abstract public function test();
 }
