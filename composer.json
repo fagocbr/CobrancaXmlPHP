@@ -24,6 +24,12 @@
     "phpunit/phpunit": "^6.5"
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --colors=always"
+    "test": "vendor/bin/phpunit --colors=always",
+    "major": "./composer.release.sh major",
+    "minor": "./composer.release.sh minor",
+    "patch": "./composer.release.sh patch"
+  },
+  "config": {
+    "process-timeout": 60000
   }
 }
