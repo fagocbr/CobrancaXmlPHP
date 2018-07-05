@@ -2,7 +2,7 @@
 
 namespace CobrancaPHP\Recursos\Santander;
 
-use CobrancaPHP\ErroValidacaoMarcacao;
+use CobrancaPHP\Erros\ErroValidacaoMarcacao;
 use stdClass;
 
 /**
@@ -11,34 +11,6 @@ use stdClass;
  */
 trait ConfiguracaoXML
 {
-    /**
-     * @param stdClass $ticket
-     * @return array
-     */
-    public function comporCobranca($ticket)
-    {
-        $estacao = $this->opcao('estacao');
-        $tpAmbiente = $this->opcao('tpAmbiente', 'P');
-
-        $nsu = str_pad($this->parametro('TITULO.NOSSO-NUMERO'), 17, '0', STR_PAD_LEFT);
-        $prfNsu = '000';
-        if ($tpAmbiente === 'T') {
-            $prfNsu = 'TST';
-        }
-        $dtNsu = $this->opcao('dtNsu', date('dmY'));
-        $dto = [
-            'ticket' => $ticket,
-            'estacao' => $estacao,
-            'tpAmbiente' => $tpAmbiente,
-            'nsu' => "{$prfNsu}{$nsu}",
-            'dtNsu' => $dtNsu,
-        ];
-
-        return [
-            'dto' => $dto
-        ];
-    }
-
     /**
      * @return array
      * @throws ErroValidacaoMarcacao
@@ -91,54 +63,66 @@ trait ConfiguracaoXML
     }
 
     /**
-     * @param string $propriedade
-     * @param mixed [$padrao] ('')
+     * @param stdClass $ticket
      * @return array
-     * @throws ErroValidacaoMarcacao
      */
-    public function marcacao($propriedade, $padrao = '')
+    private function comporEntrada($ticket)
     {
-        $valor = $this->parametro($propriedade, $padrao);
-        if (isset($this->marcacoes[$propriedade])) {
-            $marcacao = $this->marcacoes[$propriedade];
-            /** @var callable $validador */
-            $validador = $marcacao['validador'];
-            if (!$validador($valor)) {
-                throw new ErroValidacaoMarcacao($propriedade, $valor, $marcacao);
-            }
-            /** @var callable $formatador */
-            $formatador = $marcacao['formatador'];
-            $valor = $formatador($valor);
+        $estacao = $this->opcao('estacao');
+        $tpAmbiente = $this->opcao('tpAmbiente', 'P');
+
+        $nsu = str_pad($this->parametro('TITULO.NOSSO-NUMERO'), 17, '0', STR_PAD_LEFT);
+        $prfNsu = '000';
+        if ($tpAmbiente === 'T') {
+            $prfNsu = 'TST';
         }
+        $dtNsu = $this->opcao('dtNsu', date('dmY'));
+        $dto = [
+            'ticket' => $ticket,
+            'estacao' => $estacao,
+            'tpAmbiente' => $tpAmbiente,
+            'nsu' => "{$prfNsu}{$nsu}",
+            'dtNsu' => $dtNsu,
+        ];
+
         return [
-            'key' => $propriedade,
-            'value' => $valor
+            'dto' => $dto
         ];
     }
 
     /**
      * @param string $propriedade
-     * @param mixed [$padrao] (null)
-     * @return mixed
+     * @param mixed [$padrao] ('')
+     * @return array
+     * @throws ErroValidacaoMarcacao
      */
-    public function parametro($propriedade, $padrao = null)
+    protected function marcacao($propriedade, $padrao = '')
     {
-        if (isset($this->parametros[$propriedade])) {
-            return $this->parametros[$propriedade];
+        $chave = $propriedade;
+        if (isset($this->marcacoes[$propriedade])) {
+            $marcacao = $this->marcacoes[$propriedade];
+            if (isset($marcacao['apelido']) && $marcacao['apelido']) {
+                $chave = $marcacao['apelido'];
+            }
         }
-        return $padrao;
-    }
 
-    /**
-     * @param string $propriedade
-     * @param mixed [$padrao] (null)
-     * @return mixed
-     */
-    public function opcao($propriedade, $padrao = null)
-    {
-        if (isset($this->opcoes[$propriedade])) {
-            return $this->opcoes[$propriedade];
+        $valor = $this->parametro($chave, $padrao);
+
+        if (isset($marcacao)) {
+            /** @var callable $formatador */
+            $formatador = $marcacao['formatador'];
+            $valor = $formatador($valor, $marcacao);
+
+            /** @var callable $validador */
+            $validador = $marcacao['validador'];
+            if (!$validador($valor, $marcacao)) {
+                throw new ErroValidacaoMarcacao($propriedade, $valor, $marcacao);
+            }
         }
-        return $padrao;
+
+        return [
+            'key' => $propriedade,
+            'value' => $valor
+        ];
     }
 }

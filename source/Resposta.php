@@ -2,9 +2,10 @@
 
 namespace CobrancaPHP;
 
-use function is_array;
-use function is_object;
-
+/**
+ * Class Resposta
+ * @package CobrancaPHP
+ */
 class Resposta
 {
     /**
@@ -35,7 +36,7 @@ class Resposta
      * @param mixed [$padrao] (null)
      * @return mixed
      */
-    public function get($atributo, $padrao = null)
+    public function pegar($atributo, $padrao = null)
     {
         if (is_string($atributo)) {
             $atributo = explode('.', $atributo);

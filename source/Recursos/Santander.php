@@ -2,7 +2,7 @@
 
 namespace CobrancaPHP\Recursos;
 
-use CobrancaPHP\ErroValidacaoMarcacao;
+use CobrancaPHP\Erros\ErroValidacaoMarcacao;
 use CobrancaPHP\Recursos\Santander\ConfiguracaoMarcacao;
 use CobrancaPHP\Recursos\Santander\ConfiguracaoXML;
 use CobrancaPHP\Resposta;
@@ -57,15 +57,19 @@ class Santander extends Transacao
 
     /**
      * Santander constructor.
-     * @param $certificado
-     * @param $senha
+     * @param string $certificado
+     * @param string $senha
      * @param array $opcoes
      */
     public function __construct($certificado, $senha, array $opcoes = [])
     {
         parent::__construct($certificado, $senha, $opcoes);
 
-        $this->configurarMarcacoes();
+        $marcacoes = [];
+        if (isset($opcoes['marcacoes'])) {
+            $marcacoes = $opcoes['marcacoes'];
+        }
+        $this->configurarMarcacoes($marcacoes);
     }
 
     /**
@@ -86,7 +90,7 @@ class Santander extends Transacao
 
         $ticket = $this->registrarTicket($configuracoes);
 
-        $cobranca = $this->registrarCobranca($configuracoes, $ticket);
+        $cobranca = $this->registrarEntrada($configuracoes, $ticket);
 
         return Resposta::construir($cobranca);
     }
@@ -111,13 +115,39 @@ class Santander extends Transacao
      * @param stdClass $ticket
      * @return stdClass
      */
-    protected function registrarCobranca(array $options, $ticket)
+    protected function registrarEntrada(array $options, $ticket)
     {
         $soapClient = new SoapClient($this->cobrancaWsdl, $options);
 
-        $xml = $this->comporCobranca($ticket->TicketResponse->ticket);
+        $xml = $this->comporEntrada($ticket->TicketResponse->ticket);
 
         /** @noinspection PhpUndefinedMethodInspection */
         return $soapClient->registraTitulo($xml);
+    }
+
+    /**
+     * @param string $propriedade
+     * @param mixed [$padrao] (null)
+     * @return mixed
+     */
+    protected function parametro($propriedade, $padrao = null)
+    {
+        if (isset($this->parametros[$propriedade])) {
+            return $this->parametros[$propriedade];
+        }
+        return $padrao;
+    }
+
+    /**
+     * @param string $propriedade
+     * @param mixed [$padrao] (null)
+     * @return mixed
+     */
+    protected function opcao($propriedade, $padrao = null)
+    {
+        if (isset($this->opcoes[$propriedade])) {
+            return $this->opcoes[$propriedade];
+        }
+        return $padrao;
     }
 }

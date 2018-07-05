@@ -1,6 +1,6 @@
 <?php
 
-namespace CobrancaPHP;
+namespace CobrancaPHP\Erros;
 
 use Exception;
 

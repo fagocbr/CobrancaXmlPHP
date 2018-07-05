@@ -30,15 +30,15 @@ class SantanderTest extends BaseTestCase
         $this->assertInstanceOf(
             Resposta::class,
             $registrado,
-            "Comunicação com `Santander`: {$registrado->get('return.descricaoErro')}"
+            "Comunicação com `Santander`: {$registrado->pegar('return.descricaoErro')}"
         );
         $this->assertEquals(
-            $registrado->get('return.situacao'),
+            $registrado->pegar('return.situacao'),
             '00',
-            "Comunicação com `Santander`: {$registrado->get('return.descricaoErro')}"
+            "Comunicação com `Santander`: {$registrado->pegar('return.descricaoErro')}"
         );
 
-        $outros = [
+        $opcionais = [
             // 'TITULO.NOSSO-NUMERO' => null,
             'TITULO.DT-VENCTO' => date('dmY'),
             'TITULO.DT-EMISSAO' => date('dmY'),
@@ -60,11 +60,11 @@ class SantanderTest extends BaseTestCase
 
         $completo = Santander
             ::criar($certificado, $senha, $opcoes)
-            ->registrar($parametros + $outros);
+            ->registrar($parametros + $opcionais);
         $this->assertEquals(
-            $completo->get('return.situacao'),
+            $completo->pegar('return.situacao'),
             '00',
-            "Comunicação com `Santander`: {$completo->get('return.descricaoErro')}"
+            "Comunicação com `Santander`: {$completo->pegar('return.descricaoErro')}"
         );
     }
 }

@@ -3,11 +3,7 @@
 namespace CobrancaPHP\Recursos\Santander;
 
 use CobrancaPHP\Tipo;
-use function in_array;
-use function is_callable;
-use function str_pad;
-use function strlen;
-use function strval;
+use function is_numeric;
 
 /**
  * Trait ConfiguracaoMarcacao
@@ -16,10 +12,12 @@ use function strval;
 trait ConfiguracaoMarcacao
 {
     /**
-     * @return void
+     * @param array $marcacoes
      */
-    protected function configurarMarcacoes()
+    protected function configurarMarcacoes(array $marcacoes = [])
     {
+        $this->marcacoes = $marcacoes;
+
         $opcional = function () {
             return true;
         };
@@ -77,12 +75,20 @@ trait ConfiguracaoMarcacao
             };
         }
 
-        $this->marcacoes[$name] = [
-            'tipo' => $tipo,
-            'tamanho' => $tamanho,
-            'formatador' => $formatador,
-            'validador' => $validador,
-        ];
+        if (!isset($this->marcacoes[$name])) {
+            $this->marcacoes[$name] = [];
+        }
+
+        $this->marcacoes[$name]['tipo'] = $tipo;
+        $this->marcacoes[$name]['tamanho'] = $tamanho;
+
+        if (!isset($this->marcacoes[$name]['formatador'])) {
+            $this->marcacoes[$name]['formatador'] = $formatador;
+        }
+
+        if (!isset($this->marcacoes[$name]['validador'])) {
+            $this->marcacoes[$name]['validador'] = $validador;
+        }
     }
 
     /**
@@ -113,6 +119,9 @@ trait ConfiguracaoMarcacao
     protected function formatarValor($valor, $tipo, $tamanho)
     {
         if ($tipo === Tipo::TEXTO) {
+            return $valor;
+        }
+        if (!is_numeric($valor)) {
             return $valor;
         }
         if ($tipo === Tipo::NUMERO_FINANCEIRO) {
