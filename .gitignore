@@ -1,0 +1,16 @@
+# metadata
+/.idea
+
+# directories
+/certificate/*
+/vendor
+
+# test parameteres
+/env.php
+
+# env files
+/docker-compose.yml
+*.cache*
+
+# keep
+!*.gitkeep*

@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  cobrancaxml.php-app:
+    image: ambientum/php:7.0-apache
+    container_name: cobrancaxml.php-app
+    volumes:
+    - .:/var/www/app
+    - ./.docker/app/etc/apache2/apache2.conf:/etc/apache2/apache2.conf
+    - ./.docker/app/etc/php/7.0/fpm/php.ini:/etc/php/7.0/fpm/php.ini
+    - ./.docker/app/etc/php/7.0/mods-available/xdebug.ini:/etc/php/7.0/mods-available/xdebug.ini
+    ports:
+    - 8080:8080
+    expose:
+    - 9090
+    environment:
+      # export XDEBUG_REMOTE_HOST=$(ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+      XDEBUG_CONFIG: remote_host=${XDEBUG_REMOTE_HOST}
+      XDEBUG_ENABLED: 1
