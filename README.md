@@ -69,13 +69,13 @@ $parametros = [
     'Convenio' => 'XXXXXX',
     'CPF' => 'XXXXXXXXXXX',
     'Nome' => 'XXXXXXX XXXXXXX XXXXXXX XXXXX XXXXXX XXXXXXXX',
-    'PAGADOR.ENDER' => 'XXX XXXXXX XXXXXXX XX XXXXX XXXXXXX',
-    'PAGADOR.BAIRRO' => 'XXXXXXXXX',
-    'PAGADOR.CIDADE' => 'XXX',
-    'PAGADOR.UF' => 'XX',
-    'PAGADOR.CEP' => 'XXXXXXXX',
-    'TITULO.NOSSO-NUMERO' => 1,
-    'TITULO.VL-NOMINAL' => 15,
+    'Endereco' => 'XXX XXXXXX XXXXXXX XX XXXXX XXXXXXX',
+    'Bairro' => 'XXXXXXXXX',
+    'Cidade' => 'XXX',
+    'UF' => 'XX',
+    'CEP' => 'XXXXXXXX',
+    'NossoNumero' => 1,
+    'Valor' => 15,
 ];
 
 Santander::criar('~/certificado.pem', 'senha do .PEM', $opcoes)->registrar($parametros);
