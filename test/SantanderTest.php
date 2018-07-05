@@ -2,7 +2,6 @@
 
 namespace CobrancaPHP\Test;
 
-use function array_merge;
 use CobrancaPHP\Recursos\Santander;
 use CobrancaPHP\Resposta;
 
