@@ -15,6 +15,6 @@ class Resposta extends RespostaAbstrata
      */
     public function estaOk()
     {
-        return $this->pegar('return.status') === '00';
+        return $this->pegar('return.situacao') === '00';
     }
 }
