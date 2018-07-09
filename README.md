@@ -38,7 +38,7 @@ $parametros = [
 Santander::criar('~/certificado.pem', 'senha do .PEM', $opcoes)->registrar($parametros);
 ```
 
-# Sobrescrevendo Configurações
+## Sobrescrevendo Configurações
 
 
 ```php
