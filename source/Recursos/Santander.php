@@ -9,6 +9,7 @@ use CobrancaPHP\Resposta;
 use CobrancaPHP\Transacao;
 use SoapClient;
 use stdClass;
+use function stream_context_create;
 
 /**
  * Class Santander
@@ -84,7 +85,12 @@ class Santander extends Transacao
             'trace' => true,
             'local_cert' => $this->certificado,
             'passphrase' => $this->senha,
-            'cache_ws' => WSDL_CACHE_NONE
+            'cache_wsdl' => WSDL_CACHE_NONE,
+            'stream_context' => stream_context_create([
+                'http' => [
+                    'user_agent' => 'PHPSoapClient'
+                ]
+            ])
         ];
         $this->parametros = $parametros;
 
