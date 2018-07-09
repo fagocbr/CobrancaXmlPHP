@@ -5,11 +5,10 @@ namespace CobrancaPHP\Recursos;
 use CobrancaPHP\Erros\ErroValidacaoMarcacao;
 use CobrancaPHP\Recursos\Santander\ConfiguracaoMarcacao;
 use CobrancaPHP\Recursos\Santander\ConfiguracaoXML;
-use CobrancaPHP\Resposta;
+use CobrancaPHP\Recursos\Santander\Resposta;
 use CobrancaPHP\Transacao;
 use SoapClient;
 use stdClass;
-use function stream_context_create;
 
 /**
  * Class Santander

@@ -3,7 +3,7 @@
 namespace CobrancaPHP\Test;
 
 use CobrancaPHP\Recursos\Santander;
-use CobrancaPHP\Resposta;
+use CobrancaPHP\Recursos\Santander\Resposta;
 
 /**
  * Class SantanderTest

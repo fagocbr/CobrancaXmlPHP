@@ -6,7 +6,7 @@ namespace CobrancaPHP;
  * Class Resposta
  * @package CobrancaPHP
  */
-class Resposta
+abstract class Resposta
 {
     /**
      * @var mixed
@@ -30,6 +30,11 @@ class Resposta
     {
         return new static($dados);
     }
+
+    /**
+     * @return bool
+     */
+    public abstract function estaOk();
 
     /**
      * @param string $atributo
