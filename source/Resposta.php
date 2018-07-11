@@ -2,6 +2,8 @@
 
 namespace CobrancaPHP;
 
+use function is_object;
+
 /**
  * Class Resposta
  * @package CobrancaPHP
@@ -47,7 +49,10 @@ abstract class Resposta
             $atributo = explode('.', $atributo);
         }
 
-        $contexto = clone $this->dados;
+        $contexto = $this->dados;
+        if (is_object($this->dados)) {
+            $contexto = clone $this->dados;
+        }
 
         if (!is_array($contexto) && !is_object($contexto)) {
             return $padrao;
